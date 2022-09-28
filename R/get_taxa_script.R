@@ -10,7 +10,7 @@ require(tidyverse)
 
 
 ## set python to correct path
-reticulate::use_python("C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe")
+#reticulate::use_python("C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe")
 
 ## install taxonerd python package (can omit cuda.version)
 install.taxonerd(cuda.version = "cuda112")
