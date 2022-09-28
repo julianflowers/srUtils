@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.649">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Using taxonerd in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="extract-taxa-from-text_files/libs/clipboard/clipboard.min.js"></script>
+<script src="extract-taxa-from-text_files/libs/quarto-html/quarto.js"></script>
+<script src="extract-taxa-from-text_files/libs/quarto-html/popper.min.js"></script>
+<script src="extract-taxa-from-text_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="extract-taxa-from-text_files/libs/quarto-html/anchor.min.js"></script>
+<link href="extract-taxa-from-text_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="extract-taxa-from-text_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="extract-taxa-from-text_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="extract-taxa-from-text_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="extract-taxa-from-text_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#step-by-step-guide" id="toc-step-by-step-guide" class="nav-link active" data-scroll-target="#step-by-step-guide">Step by step guide</a>
+  <ul class="collapse">
+  <li><a href="#install-python-package" id="toc-install-python-package" class="nav-link" data-scroll-target="#install-python-package">Install Python package</a></li>
+  <li><a href="#install-biobert-language-model" id="toc-install-biobert-language-model" class="nav-link" data-scroll-target="#install-biobert-language-model">Install bioBert language model</a></li>
+  <li><a href="#initialise-named-entity-recognition-model" id="toc-initialise-named-entity-recognition-model" class="nav-link" data-scroll-target="#initialise-named-entity-recognition-model">Initialise named entity recognition model</a></li>
+  <li><a href="#get-text-to-process" id="toc-get-text-to-process" class="nav-link" data-scroll-target="#get-text-to-process">Get text to process</a></li>
+  <li><a href="#a-single-example" id="toc-a-single-example" class="nav-link" data-scroll-target="#a-single-example">A single example</a></li>
+  <li><a href="#scaling-up" id="toc-scaling-up" class="nav-link" data-scroll-target="#scaling-up">Scaling up</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Using taxonerd in R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="step-by-step-guide" class="level2">
+<h2 class="anchored" data-anchor-id="step-by-step-guide">Step by step guide</h2>
+<p>This process is not for the faint-hearted but gives a rapid way of extracting taxa from texts (~ 1 min per text) which can enable processing of large numbers of texts to identify similar species in research or facilitate coding for systematic maps. It only needs to be run through once. It uses a state-of-the-art model in terms of accuracy to extract the information <span class="citation" data-cites="taxonerd">Le Guillarme (<a href="#ref-taxonerd" role="doc-biblioref">2022</a>)</span>; <span class="citation" data-cites="taxonerd">Le Guillarme (<a href="#ref-taxonerd" role="doc-biblioref">2022</a>)</span>; <span class="citation" data-cites="reticulate">Ushey, Allaire, and Tang (<a href="#ref-reticulate" role="doc-biblioref">2022</a>)</span>; <span class="citation" data-cites="leguillarme2021">Le Guillarme and Thuiller (<a href="#ref-leguillarme2021" role="doc-biblioref">2021</a>)</span></p>
+<p>Uses python language models so we need to install Python and use <code>reticulate</code> package in R which allows R and Python to talk to each other.</p>
+<p>Also downloads large files so setup time can be quite long</p>
+<p>https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.13778</p>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/unnamed-chunk-1_f26d745e8be86027c8d3cf1ee8d75c03">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(<span class="st">"reticulate"</span>)) <span class="fu">install.packages</span>(reticulate)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future); <span class="fu">library</span>(furrr); <span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.7     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.2
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(multisession)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(<span class="st">"taxonerd"</span>)) <span class="fu">install.packages</span>(<span class="st">"https://github.com/nleguillarme/taxonerd/releases/download/v1.3.3/taxonerd_for_R_1.3.3.tar.gz"</span>, <span class="at">repos=</span><span class="cn">NULL</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(taxonerd)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">use_python</span>(<span class="st">"C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If your computer has an NVIDIA graphics card, you should be able to run CUDA which will allow you to use the GPU (graphics processing unit) for processing. This is much quicker than the CPU and can speed up resource intensive tasks like Natural Language Processing.</p>
+<p>To check:</p>
+<ul>
+<li><p>open windows Device Manager</p></li>
+<li><p>scroll down to Display Adapters and open to see what kind of graphics card you have</p></li>
+<li><p>check your card against <a href="http://developer.nvidia.com/cuda-gpus" title="CUDA enabled graphics cards">this list</a> - if it is there you can use CUDA.</p></li>
+<li><p>to install the CUDA toolkit on Windows see <a href="https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#windows">the quick setup guide</a></p></li>
+</ul>
+<section id="install-python-package" class="level3">
+<h3 class="anchored" data-anchor-id="install-python-package">Install Python package</h3>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/unnamed-chunk-2_b1a4cb4ba461f0302deb349a70681a4b">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.taxonerd</span>(<span class="at">cuda.version =</span> <span class="st">"cuda112"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using virtual environment "r-taxonerd" ...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+ "C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe" -m pip install --upgrade --no-user --ignore-installed "taxonerd[cuda112]==1.3.3"</code></pre>
+</div>
+</div>
+</section>
+<section id="install-biobert-language-model" class="level3">
+<h3 class="anchored" data-anchor-id="install-biobert-language-model">Install bioBert language model</h3>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/unnamed-chunk-3_833609380317e1996b5c83a7d16e925d">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>taxonerd<span class="sc">::</span><span class="fu">install.model</span>(<span class="at">model =</span> <span class="st">"en_ner_eco_biobert"</span>, <span class="at">version =</span> <span class="st">"1.3.0"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using virtual environment "r-taxonerd" ...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>+ "C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe" -m pip install --upgrade --no-user --ignore-installed "https://github.com/nleguillarme/taxonerd/releases/download/v1.3.0/en_ner_eco_biobert-1.0.0.tar.gz"</code></pre>
+</div>
+</div>
+</section>
+<section id="initialise-named-entity-recognition-model" class="level3">
+<h3 class="anchored" data-anchor-id="initialise-named-entity-recognition-model">Initialise named entity recognition model</h3>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/unnamed-chunk-4_92df61259b8f1cc089a775945b5badf3">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>linker <span class="ot">&lt;-</span> <span class="st">"ncbi_lite"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ner <span class="ot">&lt;-</span> <span class="fu">init.taxonerd</span>(<span class="st">"en_ner_eco_biobert"</span>, <span class="at">abbrev =</span> <span class="cn">TRUE</span>, <span class="at">sent =</span> <span class="cn">FALSE</span>, <span class="at">link =</span> linker, <span class="at">thresh =</span> .<span class="dv">7</span>, <span class="at">gpu =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="get-text-to-process" class="level3">
+<h3 class="anchored" data-anchor-id="get-text-to-process">Get text to process</h3>
+<p><code>taxonerd</code> offers functions for extracting taxa from blocks of text, files, or corpora (sets of files) but the file and corpora options don’t seem to be functioning properly.</p>
+<p>To extract per pdf text I use <code>readtext</code> as follows</p>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/unnamed-chunk-5_c3e3d03751edaf624fb7c38c9b2696a1">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set path to location of pdfs</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>path <span class="ot">&lt;-</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"G:</span><span class="sc">\\</span><span class="st">My Drive</span><span class="sc">\\</span><span class="st">my_corpus</span><span class="sc">\\</span><span class="st">uploads"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>pdfs <span class="ot">&lt;-</span> <span class="fu">list.files</span>(path, <span class="st">"pdf$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>pdf_text <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(pdfs, readtext<span class="sc">::</span>readtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>PDF error: Invalid shared object hint table offset</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>PDF error: xref num 1590 not found but needed, try to reconstruct&lt;0a&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="a-single-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-single-example">A single example</h3>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/check a file_6a07ec395ebf393fcd55eecc3f03ef77">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>taxa_file <span class="ot">&lt;-</span> <span class="fu">find.in.text</span>(<span class="at">ner =</span> ner, <span class="at">text =</span> pdf_text<span class="sc">$</span>text[<span class="dv">5</span>])</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>taxa_file <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_auto</span>(<span class="st">"entity"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(<span class="st">"entity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using `unnest_longer(entity, indices_include = FALSE)`; no element has names</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>New names:
+New names:
+New names:
+New names:
+New names:
+New names:
+• `` -&gt; `...1`
+• `` -&gt; `...2`
+• `` -&gt; `...3`</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  offsets          text               ...1      ...2                ...3
+  &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;     &lt;chr&gt;              &lt;dbl&gt;
+1 LIVB 7991 7999   ryegrass           NCBI:4521 Italian ryegrass   0.832
+2 LIVB 8001 8015   Lolium perenne     NCBI:4522 Lolium perenne     1    
+3 LIVB 59904 59921 Lolium perenne L.  NCBI:4522 Lolium perenne     0.941
+4 LIVB 72905 72917 white clover       NCBI:3899 white clover       1    
+5 LIVB 72919 72935 Trifolium repens   NCBI:3899 Trifolium repens   1.00 
+6 LIVB 74021 74039 perennial ryegrass NCBI:4522 perennial ryegrass 1    </code></pre>
+</div>
+</div>
+</section>
+<section id="scaling-up" class="level3">
+<h3 class="anchored" data-anchor-id="scaling-up">Scaling up</h3>
+<div class="cell" data-hash="extract-taxa-from-text_cache/html/unnamed-chunk-7_fea8f108c8c48aebe2ff9fb85c355af3">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tictoc)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>taxa_df <span class="ot">&lt;-</span> furrr<span class="sc">::</span><span class="fu">future_map2_dfr</span>(<span class="at">.x =</span> pdf_text<span class="sc">$</span>text, <span class="at">.y =</span> pdf_text<span class="sc">$</span>doc_id, <span class="sc">~</span>(<span class="fu">find.in.text</span>(ner, .x)) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">file =</span> .y))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2984.41 sec elapsed</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(taxa_df) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                offsets              text
+T0...1 LIVB 21393 21401          Sphagnum
+T1...2 LIVB 22635 22649    Sphagnum peats
+T2...3 LIVB 24324 24329             sheep
+T3...4 LIVB 26103 26108             sheep
+T4...5 LIVB 26875 26892 Rubus chamaemorus
+T5...6 LIVB 27953 27960           heather
+                                                                                                                                            entity
+T0...1                                                                                                                     NCBI:13804, Sphagnum, 1
+T1...2                                                                                                      NCBI:13804, Sphagnum, 0.71510237455368
+T2...3                                                                                                                         NCBI:9940, sheep, 1
+T3...4                                                                                                                         NCBI:9940, sheep, 1
+T4...5                                                                                                            NCBI:57936, Rubus chamaemorus, 1
+T5...6 NCBI:1256648, C. heatherae, 0.777346432209015, NCBI:2569842, C. heatherae, 0.777346432209015, NCBI:1174604, C. heatherae, 0.777346432209015
+                     file
+T0...1 09596830094971.pdf
+T1...2 09596830094971.pdf
+T2...3 09596830094971.pdf
+T3...4 09596830094971.pdf
+T4...5 09596830094971.pdf
+T5...6 09596830094971.pdf</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>taxa <span class="ot">&lt;-</span> taxa_df <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_longer</span>(<span class="st">"entity"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taxa =</span> <span class="fu">map</span>(entity, <span class="dv">2</span> ), </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">prob =</span> <span class="fu">map_dbl</span>(entity, <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="st">"taxa"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>taxa <span class="sc">|&gt;</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(file, text, taxa, prob) <span class="sc">|&gt;</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,192 × 4
+   file                             text                 taxa               prob
+   &lt;chr&gt;                            &lt;chr&gt;                &lt;chr&gt;             &lt;dbl&gt;
+ 1 09596830094971.pdf               Sphagnum             Sphagnum          1    
+ 2 09596830094971.pdf               Sphagnum peats       Sphagnum          0.715
+ 3 09596830094971.pdf               sheep                sheep             1    
+ 4 09596830094971.pdf               Rubus chamaemorus    Rubus chamaemorus 1    
+ 5 09596830094971.pdf               heather              C. heatherae      0.777
+ 6 09596830094971.pdf               Eriophorum           Eriophorum        1    
+ 7 09596830094971.pdf               Calluna vulgaris     Calluna vulgaris  1    
+ 8 09596830094971.pdf               Rubus chamaemorus L. Rubus chamaemoru… 1    
+ 9 09596830094971.pdf               Eriophorum bog       Eriophorum        0.788
+10 1-s2.0-003807179500092S-main.pdf Dairy cow            dairy cow         1    
+# … with 1,182 more rows</code></pre>
+</div>
+</div>
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-taxonerd" class="csl-entry" role="doc-biblioentry">
+Le Guillarme, Nicolas. 2022. <span>“Taxonerd: Taxonomic Named Entity Recognition Using Deep Models.”</span>
+</div>
+<div id="ref-leguillarme2021" class="csl-entry" role="doc-biblioentry">
+Le Guillarme, Nicolas, and Wilfried Thuiller. 2021. <span>“TaxoNERD: Deep Neural Models for the Recognition of Taxonomic Entities in the Ecological and Evolutionary Literature.”</span> <em>Methods in Ecology and Evolution</em> 13 (3): 625–41. <a href="https://doi.org/10.1111/2041-210x.13778">https://doi.org/10.1111/2041-210x.13778</a>.
+</div>
+<div id="ref-reticulate" class="csl-entry" role="doc-biblioentry">
+Ushey, Kevin, JJ Allaire, and Yuan Tang. 2022. <span>“Reticulate: Interface to ’Python’.”</span> <a href="https://CRAN.R-project.org/package=reticulate">https://CRAN.R-project.org/package=reticulate</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

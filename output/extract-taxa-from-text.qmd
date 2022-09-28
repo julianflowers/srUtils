@@ -1,0 +1,122 @@
+---
+title: "Using taxonerd in R"
+format: 
+  html:
+    toc: true
+    toc_float: true
+    keep-md: true
+editor: visual
+execute: 
+   cache: true
+bibliography: references.bib
+---
+
+## Step by step guide
+
+This process is not for the faint-hearted but gives a rapid way of extracting taxa from texts (\~ 1 min per text) which can enable processing of large numbers of texts to identify similar species in research or facilitate coding for systematic maps. It only needs to be run through once. It uses a state-of-the-art model in terms of accuracy to extract the information @taxonerd; @taxonerd; @reticulate; @leguillarme2021
+
+Uses python language models so we need to install Python and use `reticulate` package in R which allows R and Python to talk to each other.
+
+Also downloads large files so setup time can be quite long
+
+https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/2041-210X.13778
+
+```{r}
+if(!require("reticulate")) install.packages(reticulate)
+library(future); library(furrr); library(tidyverse)
+
+plan(multisession)
+
+if(!require("taxonerd")) install.packages("https://github.com/nleguillarme/taxonerd/releases/download/v1.3.3/taxonerd_for_R_1.3.3.tar.gz", repos=NULL)
+library(taxonerd)
+
+use_python("C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe")
+
+
+```
+
+If your computer has an NVIDIA graphics card, you should be able to run CUDA which will allow you to use the GPU (graphics processing unit) for processing. This is much quicker than the CPU and can speed up resource intensive tasks like Natural Language Processing.
+
+To check:
+
+-   open windows Device Manager
+
+-   scroll down to Display Adapters and open to see what kind of graphics card you have
+
+-   check your card against [this list](http://developer.nvidia.com/cuda-gpus "CUDA enabled graphics cards") - if it is there you can use CUDA.
+
+-   to install the CUDA toolkit on Windows see [the quick setup guide](https://docs.nvidia.com/cuda/cuda-quick-start-guide/index.html#windows)
+
+### Install Python package
+
+```{r}
+
+install.taxonerd(cuda.version = "cuda112")
+```
+
+### Install bioBert language model
+
+```{r}
+taxonerd::install.model(model = "en_ner_eco_biobert", version = "1.3.0")
+
+```
+
+### Initialise named entity recognition model
+
+```{r}
+linker <- "ncbi_lite"
+ner <- init.taxonerd("en_ner_eco_biobert", abbrev = TRUE, sent = FALSE, link = linker, thresh = .7, gpu = TRUE)
+```
+
+### Get text to process
+
+`taxonerd` offers functions for extracting taxa from blocks of text, files, or corpora (sets of files) but the file and corpora options don't seem to be functioning properly.
+
+To extract per pdf text I use `readtext` as follows
+
+```{r}
+
+# set path to location of pdfs
+
+path <- here::here("G:\\My Drive\\my_corpus\\uploads")
+
+pdfs <- list.files(path, "pdf$", full.names = TRUE)
+
+pdf_text <- purrr::map_dfr(pdfs, readtext::readtext)
+```
+
+### A single example
+
+```{r}
+#| label: check a file
+
+taxa_file <- find.in.text(ner = ner, text = pdf_text$text[5])
+
+taxa_file |>
+  head(10) |>
+  tidyr::unnest_auto("entity") |>
+  tidyr::unnest_wider("entity")
+```
+
+### Scaling up
+
+```{r}
+library(tictoc)
+tic()
+taxa_df <- furrr::future_map2_dfr(.x = pdf_text$text, .y = pdf_text$doc_id, ~(find.in.text(ner, .x)) |> mutate(file = .y))
+toc()
+
+head(taxa_df) 
+
+taxa <- taxa_df |>
+  tidyr::unnest_longer("entity") |> 
+  mutate(taxa = map(entity, 2 ), 
+         prob = map_dbl(entity, 3)) |>
+  unnest("taxa")
+
+
+
+taxa |>
+  select(file, text, taxa, prob) |>
+  distinct()
+```
