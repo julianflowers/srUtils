@@ -1,5 +1,5 @@
 library(spacyr); library(tidyverse)
-reticulate::use_python("C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe")
+#reticulate::use_python("C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe")
 spacy_download_langmodel()
 spacy_install()
 
