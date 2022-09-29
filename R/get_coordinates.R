@@ -19,11 +19,11 @@ get_coordinates <- function(text){
   require(stringr)
   require(tidyr)
 
-  colon <- "([NSEW])(\\d{1,2}):(\\d{1,2}):(\\d{1,2})"
-  decimal <- "(\\d{1,2})\\.(\\d{1,2}).?(◦|°).?([NSEW])"
-  polar_lat <- "(\\d{1,2})(◦|°|)\\s?(\\d{1,2})\\D*([NS])"
-  polar_long <- "(\\d{1,2})(◦|°|)\\s?(\\d{1,3})\\D*([EW])"
-  e_n <- "(\\d{4,6})\\D?([NS]).*(\\d{4,6})\\D?([EW])"
+  colon <- "([NnSsEeWw])(\\d{1,2}):(\\d{1,2}):(\\d{1,2})"
+  decimal <- "(\\d{1,2})\\.(\\d{1,2}).?(◦|°).?([NnSsEeWw])"
+  polar_lat <- "(\\d{1,2})(◦|°|)\\s?(\\d{1,2})\\D*([NnSs])"
+  polar_long <- "(\\d{1,2})(◦|°|)\\s?(\\d{1,3})\\D*([EeWw])"
+  e_n <- "(\\d{4,6})\\D?([NnSs]).*(\\d{4,6})\\D?([EeWw])"
 
   colon_pattern <- str_match_all(text, colon) |>
     enframe()
