@@ -6,6 +6,7 @@
 #' @export
 #'
 #' @examples get_chemical(text)
+
 get_chemical <- function(text){
 
   require(tibble)
