@@ -2,10 +2,11 @@
 #'
 #' @param files
 #'
-#' @return
+#' @return data frame
 #' @export
 #'
-#' @examples
+#' @examples unnest_toc(files)
+#'
 unnest_toc <- function(files){
 
   require(purrr)

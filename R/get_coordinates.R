@@ -39,7 +39,7 @@ get_coordinates <- function(text){
   e_n_pattern <- str_match_all(text, e_n) |>
     enframe()
 
-  out <- list(c = colon_pattern, d = decimal_pattern, lat = polar_lat_pattern,
+  out <- data.frame(c = colon_pattern, d = decimal_pattern, lat = polar_lat_pattern,
                           long = polar_long_pattern, en = e_n_pattern)
   out
 }
