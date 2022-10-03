@@ -1,3 +1,5 @@
+python  <- "C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe"
+#python <- 'C:/Users/Julian/AppData/Local/r-miniconda/envs/spacy_condaenv/python.exe'
 
 ## install packages
 if(!require("taxonerd")) install.packages("https://github.com/nleguillarme/taxonerd/releases/download/v1.3.3/taxonerd_for_R_1.3.3.tar.gz", repos=NULL)
@@ -9,11 +11,14 @@ library(taxonerd)
 require(tidyverse)
 
 
+python <- python
+cuda <- NULL
+
 ## set python to correct path
-reticulate::use_python("C:/Users/Julian/OneDrive/Documents/.virtualenvs/r-taxonerd/Scripts/python.exe")
+reticulate::use_python(python)
 
 ## install taxonerd python package (can omit cuda.version)
-install.taxonerd(cuda.version = "cuda112")
+install.taxonerd(cuda.version = cuda)
 
 ## load language model
 taxonerd::install.model(model = "en_ner_eco_biobert", version = "1.3.0")
@@ -21,26 +26,11 @@ taxonerd::install.model(model = "en_ner_eco_biobert", version = "1.3.0")
 
 
 ## initialise named entity model (can have link = gbf_backbone, link = ncbi_lite)
-ner <- init.taxonerd("en_ner_eco_biobert", abbrev = TRUE, sent = FALSE, link = "ncbi_lite", thresh = .7, gpu = TRUE)
+linker <- "taxref"
+ner <- init.taxonerd("en_ner_eco_biobert", abbrev = TRUE, sent = FALSE, link = linker, thresh = .7, gpu = TRUE)
 
 
 ## get some pdfs
-
-library(rplos)
-library(comprehenr)
-library(data.table)
-library(dplyr)
-
-corpus.dir <- "./my_corpus"
-dir.create(corpus.dir, showWarnings = FALSE)
-# Get DOIs for full article in PLoS One
-res <- searchplos('biodiversity AND (habitat OR distribution OR survey) AND neotropics', c('id','publication_date','title'), list('subject:ecology', 'journal_key:PLoSONE','doc_type:full'), limit = 10)
-# Download full-text articles in PDF format
-for (doi in res$data$id) {
-  pdf.url <- gsub("manuscript", "printable", full_text_urls(doi=doi))
-  dest.file <- file.path(corpus.dir, paste(gsub("/", "_", doi), "pdf", sep="."))
-  download.file(pdf.url, dest.file)
-}
 
 
 ## path-to-pdfs
@@ -61,9 +51,11 @@ taxa_file |>
 taxa_df <- map2_dfr(.x = p_df_text$text, .y = p_df_text$doc_id, ~(find.in.text(ner, .x)) |> mutate(file = .y))
 
 taxa <- taxa_df |>
-   separate(entity, remove = TRUE, c("NCBI" , "taxa", "prob"), sep = ", ") |>
-  mutate(NCBI = str_remove_all(NCBI, "list\\("),
-         prob = parse_number(prob))
+  mutate(taxa1 = map(entity, ~unlist(unlist(.x)))) |>
+  separate(taxa1, remove = TRUE, c("NCBI" , "taxa", "prob"), sep = ", ") |>
+  select(-NCBI) |>
+  mutate(prob = parse_number(prob))
+
+taxa
 
 
-setDT(taxa)[]

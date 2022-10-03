@@ -1,0 +1,25 @@
+---
+title: "Utilities for extracting information from text"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Utilities for extracting information from text}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Getting started
+
+The package can be installed `devtools::install_github("julianflowers/srUtils")`
+
+```{r setup}
+devtools::install_github("julianflowers/srUtils")
+library(srUtils)
+```
+
