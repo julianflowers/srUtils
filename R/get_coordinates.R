@@ -26,18 +26,18 @@ get_coordinates <- function(text){
   e_n <- "(\\d{4,6})\\D?([NnSs]).*(\\d{4,6})\\D?([EeWw])"
 
   colon_pattern <- str_match_all(text, colon) |>
-    enframe()
+    tibble::enframe()
   decimal_pattern <- str_match_all(text, decimal) |>
-    enframe()
+    tibble::enframe()
 
   polar_lat_pattern <- str_match_all(text, polar_lat) |>
-    enframe()
+    tibble::enframe()
 
   polar_long_pattern <- str_match_all(text, polar_long) |>
-    enframe()
+    tibble::enframe()
 
   e_n_pattern <- str_match_all(text, e_n) |>
-    enframe()
+    tibble::enframe()
 
   out <- data.frame(c = colon_pattern, d = decimal_pattern, lat = polar_lat_pattern,
                           long = polar_long_pattern, en = e_n_pattern)

@@ -18,6 +18,7 @@ extract_location <- function(text, doc_id){
   require(tidyr)
   require(purrr)
   require(tictoc)
+  require(tibble)
 
   tic()
 
@@ -25,7 +26,7 @@ extract_location <- function(text, doc_id){
 
   locs <- safe_loc(text) %>%
     .["result"] |>
-    enframe() |>
+    tibble::enframe() |>
     mutate(file = doc_id)
 
   toc()
