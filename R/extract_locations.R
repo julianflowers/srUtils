@@ -7,7 +7,7 @@
 #'
 #' @examples extract_location(text)
 
-extract_location <- function(text, doc_id){
+extract_location <- function(text){
 
   options(java.parameters = c("-XX:+UseConcMarkSweepGC", "-Xmx8192m"))
   gc()  ## https://stackoverflow.com/questions/34624002/r-error-java-lang-outofmemoryerror-java-heap-space
@@ -26,8 +26,7 @@ extract_location <- function(text, doc_id){
 
   locs <- safe_loc(text) %>%
     .["result"] |>
-    tibble::enframe() |>
-    mutate(file = doc_id)
+    tibble::enframe()
 
   toc()
 
@@ -35,12 +34,4 @@ extract_location <- function(text, doc_id){
 
 }
 
-# rte$text[1]
-# t <- map2_df(rte$text, rte$doc_id, extract_location)
-# t |>
-#   filter(value != "NULL") |>
-#   unnest("value") |>
-#   filter(value != "NULL") |>
-#   unnest("value")
-#
-# location_entity(rte$text[2])
+

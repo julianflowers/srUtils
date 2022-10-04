@@ -14,9 +14,10 @@ get_air_temperature <- function(text){
   require(dplyr)
   require(stringr)
   require(tidyr)
+  require(stringi)
 
-  at_pattern <- "(\\d{1,}\\.?\\d{1,2}?)\\D*(\\u00b0|\\u25e6|degrees)(.?[C])\\D*"
-  at_pattern <- str_match_all(text, at_pattern) |>
-    enframe()
+  at_pattern <- paste0("(\\d{1,}\\.?\\d{1,2}?)\\D*", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), "|", "degrees", ")", "(", ".?[C]", ")", "\\D*")
+  at <- str_match_all(text, at_pattern) |>
+    tibble::enframe()
 
 }

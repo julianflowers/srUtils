@@ -4,7 +4,7 @@
 \alias{extract_location}
 \title{Extract locations from text (simple version)}
 \usage{
-extract_location(text, doc_id)
+extract_location(text)
 }
 \arguments{
 \item{text}{}

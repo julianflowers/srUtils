@@ -18,6 +18,7 @@ Imports:
     stringi,
     stringr,
     tibble,
+    tictoc,
     tidyr
 Suggests: 
     knitr,
