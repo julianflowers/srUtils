@@ -24,6 +24,7 @@ get_coordinates <- function(text){
   polar_lat <- paste0("(\\d{1,3}.?)", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", "\\s?", "(\\d{1,3})", "\\D*", "([NnSs])")
   polar_long <- paste0("(\\d{1,3}.?)", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", "\\s?", "(\\d{1,3})", "\\D*", "([EeWw])")
   e_n <- "(\\d{4,6})\\D?([NnSs]).*(\\d{4,6})\\D?([EeWw])"
+  misc <- "(.?)(\\d{1,2}u).?(\\d{1,2}9)(.*)([NSEW])"
 
   colon_pattern <- str_match_all(text, colon) |>
     tibble::enframe()
@@ -39,8 +40,13 @@ get_coordinates <- function(text){
   e_n_pattern <- str_match_all(text, e_n) |>
     tibble::enframe()
 
+  misc_pattern <- str_match_all(text, misc) |>
+    tibble::enframe()
+
+
   out <- data.frame(c = colon_pattern, d = decimal_pattern, lat = polar_lat_pattern,
-                          long = polar_long_pattern, en = e_n_pattern)
+                          long = polar_long_pattern, en = e_n_pattern,
+                    misc = misc_pattern)
   out
 }
 
