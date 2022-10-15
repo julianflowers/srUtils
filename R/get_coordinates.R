@@ -28,6 +28,7 @@ get_coordinates <- function(text){
 
   colon_pattern <- str_match_all(text, colon) |>
     tibble::enframe()
+
   decimal_pattern <- str_match_all(text, decimal) |>
     tibble::enframe()
 
