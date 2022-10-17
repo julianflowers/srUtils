@@ -21,10 +21,10 @@ get_coordinates <- function(text){
 
   colon <- "([NnSsEeWw])(\\d{1,2}):(\\d{1,2}):(\\d{1,2})"
   decimal <- paste0("(\\d{1,3})", "\\.", "(\\d{1,2})", ".?",  "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", ".?", "([NnSsEeWw])")
-  polar_lat <- paste0("(\\d{1,3}.?)", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", "\\s?", "(\\d{1,3})", "\\D*", "([NnSs])")
-  polar_long <- paste0("(\\d{1,3}.?)", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", "\\s?", "(\\d{1,3})", "\\D*", "([EeWw])")
-  e_n <- "(\\d{4,6})\\D?([NnSs]).*(\\d{4,6})\\D?([EeWw])"
-  misc <- "(.?)(\\d{1,2}u).?(\\d{1,2}9)(.*)([NSEW])"
+  polar_lat <- paste0("(\\d{1,3}.?)", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", "\\s?", "(\\d{1,3})", "\\D?", "([NnSs])")
+  polar_long <- paste0("(\\d{1,3}.?)", "(", stringi::stri_unescape_unicode('\\u00b0'), "|", stringi::stri_unescape_unicode('\\u25e6'), ")", "\\s?", "(\\d{1,3})", "\\D?", "([EeWw])")
+  e_n <- "(\\d{4,6})\\D?([NnSs]).?(\\d{4,6})\\D?([EeWw])"
+  misc <- ".?(\\d{1,2})(u.?)(\\d{1,3})(.?)([NSEW])"
 
   colon_pattern <- str_match_all(text, colon) |>
     tibble::enframe()
