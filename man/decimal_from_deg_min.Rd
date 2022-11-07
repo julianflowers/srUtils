@@ -16,6 +16,6 @@ data frame
 Calculate decimal coordinates from degrees/minutes
 }
 \examples{
-decnial_from_deg_min(degrees, minutes, point)
+decimal_from_deg_min(degrees, minutes, point)
 
 }

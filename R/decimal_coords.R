@@ -8,7 +8,7 @@
 #' @return data frame
 #' @export
 #'
-#' @examples decnial_from_deg_min(degrees, minutes, point)
+#' @examples decimal_from_deg_min(degrees, minutes, point)
 #'
 decimal_from_deg_min <- function(degrees, minutes, point){
 
