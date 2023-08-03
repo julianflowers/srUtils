@@ -5,10 +5,13 @@
 #'
 #' @examples textextract_initialize()
 
-textextract_initialize <- function(){
+srutils_initialise <- function(){
 
   require(reticulate)
 
-  py_install("textract", pip = TRUE)
+  virtualenv_create("srutils")
+  Sys.setenv(RETICULATE_PYTHON = '/Users/julianflowers/.virtualenvs/srutils/bin/python')
+  use_virtualenv("srutils")
+  py_install(c("textract", "semanticscholar", "flair", "taxonerd"), pip = TRUE, envname = "srutils")
 
 }

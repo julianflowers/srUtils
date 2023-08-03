@@ -8,7 +8,7 @@ Description: Extract coordinates, elevations, locations, air temperature from pd
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     dplyr,
     ggspatial,
@@ -22,7 +22,8 @@ Imports:
     stringr,
     tibble,
     tictoc,
-    tidyr
+    tidyr, 
+    reticulate
 Suggests: 
     knitr,
     rmarkdown

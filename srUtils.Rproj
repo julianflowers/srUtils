@@ -22,5 +22,5 @@ PackageInstallArgs: --no-multiarch --with-keep.source
 PackageRoxygenize: rd,collate,namespace
 
 PythonType: system
-PythonVersion: 3.10.7
+PythonVersion: 3.10.11
 PythonPath: /opt/homebrew/bin/python3.10

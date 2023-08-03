@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @example decimal_from_en(easting, northing)
+#'
 decimal_from_en <- function(easting, northing){
   require(jsonlite)
   #uses https://webapps.bgs.ac.uk/data/webservices/convertForm.cfm

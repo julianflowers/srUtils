@@ -1,18 +1,24 @@
-#' @name Search web of science
+#' Search Web of Science
 #'
+#' This function searches the Web of Science database using a query and returns the results.
 #'
-#'
-#' @param api_key
-#' @param query
-#' @param count
-#' @param first_record
-#'
-#' @return data frame
-#' @export
-#'
-#' @examples search_woslite(<your api_key>, query = "ecological traps")
+#' @param api_key (optional) the API key for accessing the Web of Science API
+#' @param query the search query
+#' @param count the number of results to return (default is 100)
+#' @param first_record the index of the first result to return (default is 1)
+#' @return a list containing the search results and the total count of matched records
+#' @import jsonlite
+#' @import curl
+#' @import dplyr
+#' @import tidyr
+#' @import stringr
+#' @examples
+#' search_wos("my-api-key", "climate change")
 
-search_woslite <- function(api_key = api_key, query, count = 10, first_record = 1){
+#' @export
+
+
+search_wos <- function(api_key = api_key, query, count = 100, first_record = 1){
 
   require(jsonlite)
   require(curl)
@@ -20,13 +26,16 @@ search_woslite <- function(api_key = api_key, query, count = 10, first_record = 
   require(tidyr)
   require(stringr)
 
-  query = query
+  ss <- query
+  #AND (UK OR Britain OR United Kingdom OR Great Britain) AND (Urban OR Town OR City OR Village)"
+
+  query = ss
   h <- curl::new_handle()
   curl::handle_setheaders(h,
-                          "X-ApiKey" ="b4b17edd048dc838bda83c6412238fb82f67cbaf",
+                          "X-ApiKey" = api_key,
                           "accept" = "application/json")
 
-  uri <- "https://wos-api.clarivate.com/api/woslite/?databaseId=WOK" # search all database
+  uri <- "https://wos-api.clarivate.com/api/wos/?databaseId=WOK" # search all databases
   q <- paste0("TI%3D%28", str_replace_all(query, " ", "%20"), "%29")
   count <- 100
   first_record <- 1
@@ -40,37 +49,10 @@ search_woslite <- function(api_key = api_key, query, count = 10, first_record = 
 
   search <- jsonlite::fromJSON((search), simplifyDataFrame = TRUE)
 
-  search
-
-
-  id <- search$Data$UT |>
-    tibble::enframe()
-  title <- search$Data$Title$Title |>
-    tibble::enframe()
-  year <- search$Data$Source$Published.BiblioYear |>
-    tibble::enframe()
-  journal <- search$Data$Source$SourceTitle |>
-    tibble::enframe()
-  keywords <- search$Data$Keyword$Keywords |>
-    tibble::enframe()
-  doi <- search$Data$Other$Identifier.Doi |>
-    tibble::enframe()
-
-  result <- data.frame(id = id, year = year, title = title, journal = journal, doi = doi, kw = keywords) |>
-    dplyr::select(-contains("name")) |>
-    unnest("title.value") |>
-    unnest("year.value") |>
-    unnest("doi.value") |>
-    unnest("journal.value") |>
-    unnest("kw.value") |>
-    group_by(id.value) |>
-    mutate(kw = paste(kw.value, collapse = "; ")) |>
-    select(-kw.value) |>
-    distinct()
-
-  result
-  #out <- list(result = tibble::as_tibble(result), query = search$QueryResult)
-
+  out <- list(res = search$Data, count = search$QueryResult)
 
 }
+
+
+
 
