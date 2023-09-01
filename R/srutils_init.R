@@ -23,9 +23,8 @@ srutils_initialise <- function(){
   flair <- import("flair")
   pdfreader <- import("PyPDF2")
   pdfreader <- pdfreader$PdfReader
-  tagger <- flair$nn$Classifier$load("ner-large") ## best model
+  biotagger <- flair$nn$Classifier$load("bioner") ## best model
   fast_tag <- flair$nn$Classifier$load("ner-fast") ## fastest model
-  mt <- flair$nn$Classifier$load('hunflair')
   Sentence <- flair$data$Sentence
   splitter <- flair$splitter$SegtokSentenceSplitter
 
