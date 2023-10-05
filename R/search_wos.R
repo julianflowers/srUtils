@@ -36,7 +36,7 @@ search_wos <- function(api_key = api_key, query, count = 100, first_record = 1){
                           "accept" = "application/json")
 
   uri <- "https://wos-api.clarivate.com/api/woslite/?databaseId=WOK" # search all databases
-  q <- str_replace_all(query, " ", "%20"), "%29")
+  q <- str_replace_all(query, " ", "%20"))
   count <- 100
   first_record <- first_record
 
