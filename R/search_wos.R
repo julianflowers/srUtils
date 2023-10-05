@@ -35,11 +35,13 @@ search_wos <- function(api_key = api_key, query, count = 100, first_record = 1){
                           "accept" = "application/json")
 
   uri <- "https://wos-api.clarivate.com/api/woslite/?databaseId=WOK" # search all databases
-  q <- str_replace_all(query, " ", "%20")
+  q <- paste0("TI%3D%28", str_replace_all(query, " ", "%20"), "%29")
+  q1 <- paste0("AB%3D%28", str_replace_all(query, " ", "%20"), "%29")
   count <- 100
   first_record <- first_record
 
   url <- paste0(uri, "&usrQuery=", q, "&count=", count, "&firstRecord=", first_record)
+  urlq <- paste0(uri, "&usrQuery=", qq, "&count=", count, "&firstRecord=", first_record)
   url
 
   search <- curl::curl_fetch_memory(url = url, handle = h)
@@ -48,7 +50,13 @@ search_wos <- function(api_key = api_key, query, count = 100, first_record = 1){
 
   search <- jsonlite::fromJSON((search), simplifyDataFrame = TRUE)
 
-  out <- list(res = search$Data, count = search$QueryResult)
+  search1 <- curl::curl_fetch_memory(url = urlq, handle = h)
+
+  search1 <- jsonlite::prettify(rawToChar(search1$content))
+
+  search1 <- jsonlite::fromJSON((search1), simplifyDataFrame = TRUE)
+
+  out <- list(res = search$Data, count = search$QueryResult, res1 = search1$Data, count1 = search1$QueryResult)
 
 }
 
