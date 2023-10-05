@@ -26,10 +26,9 @@ search_wos <- function(api_key = api_key, query, count = 100, first_record = 1){
   require(tidyr)
   require(stringr)
 
-  ss <- query
+  query <- query
   #AND (UK OR Britain OR United Kingdom OR Great Britain) AND (Urban OR Town OR City OR Village)"
-
-  query = ss
+  
   h <- curl::new_handle()
   curl::handle_setheaders(h,
                           "X-ApiKey" = api_key,
