@@ -41,7 +41,7 @@ search_wos <- function(api_key = api_key, query, count = 100, first_record = 1){
   first_record <- first_record
 
   url <- paste0(uri, "&usrQuery=", q, "&count=", count, "&firstRecord=", first_record)
-  urlq <- paste0(uri, "&usrQuery=", qq, "&count=", count, "&firstRecord=", first_record)
+  urlq <- paste0(uri, "&usrQuery=", q1, "&count=", count, "&firstRecord=", first_record)
   url
 
   search <- curl::curl_fetch_memory(url = url, handle = h)
